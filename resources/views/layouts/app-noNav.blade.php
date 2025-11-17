@@ -19,7 +19,8 @@
             </style>
         @endif
     </head>
-    <body>
+    {{-- Formulaire login par default --}}
+    <body data-mode="{{ $mode ?? 'login' }}"> 
         {{-- Height fixer temporaire --}}
         <main class="bg-body ">
             @yield('content')
