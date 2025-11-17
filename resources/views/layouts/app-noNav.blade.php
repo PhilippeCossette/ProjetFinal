@@ -21,7 +21,7 @@
     </head>
     <body>
         {{-- Height fixer temporaire --}}
-        <main class="bg-body" style="min-height: 150vh;">
+        <main class="bg-body ">
             @yield('content')
         </main>
     </body>
