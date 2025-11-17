@@ -3,10 +3,9 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CellierController;
+use App\Http\Controllers\AccueilController;
 
-// Route::get('/', function () {
-//     return view('catalogue.index');
-// });
+Route::get('/', [AccueilController::class, 'index']);
 
 
 // Formulaires
