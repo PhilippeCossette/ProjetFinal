@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CellierController;
+use App\Http\Controllers\AccueilController;
 
 // Routes accessibles seulement aux invités (non connectés)
 Route::middleware('guest')->group(function () {
@@ -22,6 +23,5 @@ Route::post('/logout', [AuthController::class, 'logout'])
 Route::middleware('auth')->group(function () {
     // Page principale après login/inscription
     Route::get('/celliers', [CellierController::class, 'index'])->name('celliers.index');
-
-   
+  
 });
