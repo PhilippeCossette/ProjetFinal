@@ -26,3 +26,8 @@ Route::middleware('auth')->group(function () {
     // Page principale après login/inscription
     Route::get('/celliers', [CellierController::class, 'index'])->name('celliers.index');
 });
+
+// Temporaire: route de test pour la vue des celliers
+Route::get('/cellierstest', function () {
+    return view('cellar.index');
+});

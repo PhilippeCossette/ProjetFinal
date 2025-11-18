@@ -70,6 +70,9 @@
     --spacing-8: 32px;
     --spacing-12: 48px;
 
+    --spacing-header: var(--header-height);
+    --header-height: 72px;
+
     /* FONT SIZES */
     --text-xs: 12px;
     --text-sm: 14px;
