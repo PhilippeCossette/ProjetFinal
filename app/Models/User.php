@@ -6,7 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use App\Models\Cellier;
 
 class User extends Authenticatable
 {
@@ -50,10 +50,18 @@ class User extends Authenticatable
     }
 
     /**
-     * Les celliers appartenant à l'utilisateur.
+     * Un user possède plusieurs celliers.
      */
-    public function celliers(): HasMany
+    public function celliers()
     {
-        return $this->hasMany(Cellier::class, 'id_utilisateur', 'id');
+        return $this->hasMany(Cellier::class);
+    }
+
+    /**
+     * Helper simple pour vérifier le rôle admin.
+     */
+    public function isAdmin(): bool
+    {
+        return (bool) $this->is_admin;
     }
 }
