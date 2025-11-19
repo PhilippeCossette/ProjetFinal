@@ -1,5 +1,5 @@
 @props(['name'=>'Cellier', 'amount' => '0', 'id' => ''])
-<a  class="cellar-box p-3 bg-card rounded-lg flex justify-between shadow-md border-border-base border hover:shadow-sm hover:bg-card-hover transition-all duration-300" href="#">
+<a href="/celliers/{{ $id }}" class="cellar-box p-3 bg-card rounded-lg flex justify-between shadow-md border-border-base border hover:shadow-sm hover:bg-card-hover transition-all duration-300" href="#">
    <div class="flex flex-col gap-1">
     <h2 class="text-2xl font-semibold">{{ $name }}</h2>
    @if ($amount == 0)
