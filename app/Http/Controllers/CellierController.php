@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Auth;
 
 class CellierController extends Controller
 {
-/**
+    /**
      * Liste les celliers de l'utilisateur connecté.
      */
     public function index()
@@ -16,7 +16,7 @@ class CellierController extends Controller
         $user = Auth::user();
 
         $celliers = $user->celliers()
-            ->orderByDesc('date_creation')
+            ->orderByDesc('created_at')
             ->get();
 
         return view('celliers.index', compact('celliers'));
@@ -37,13 +37,12 @@ class CellierController extends Controller
     {
         $validated = $request->validate([
             'nom' => 'required|string|max:255',
-            'description' => 'nullable|string', // si tu ajoutes ce champ plus tard
+            // 'description' => 'nullable|string',
         ]);
 
         $request->user()->celliers()->create([
-            'nom'           => $validated['nom'],
-            'date_creation' => now(),  // correspond à la colonne de ta table
-            // 'description' => $validated['description'] ?? null, // si tu as cette colonne
+            'nom' => $validated['nom'],
+            // 'description' => $validated['description'] ?? null,
         ]);
 
         return redirect()
@@ -52,11 +51,13 @@ class CellierController extends Controller
     }
 
     /**
-     * (Optionnel) Affiche un cellier spécifique.
+     * PV-13 : Affiche un cellier spécifique avec ses bouteilles.
      */
     public function show(Cellier $cellier)
     {
         $this->authorizeCellier($cellier);
+
+        $cellier->load('bouteilles');
 
         return view('celliers.show', compact('cellier'));
     }
@@ -112,7 +113,7 @@ class CellierController extends Controller
      */
     protected function authorizeCellier(Cellier $cellier): void
     {
-        if ($cellier->id_utilisateur !== Auth::id()) {
+        if ($cellier->user_id !== Auth::id()) {
             abort(403);
         }
     }
