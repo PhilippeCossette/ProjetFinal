@@ -11,34 +11,32 @@ class Cellier extends Model
 {
     use HasFactory;
 
-    // La table est correcte
+    // Table associée
     protected $table = 'celliers';
 
-<<<<<<< HEAD
-    // Désactive les colonnes 'created_at' et 'updated_at' (selon le schéma bd_vino.pdf)
-    public $timestamps = false; 
-=======
->>>>>>> cbb3bb4cc9bd0236d599492308c0b9a0c61ec03c
-
-    // ✔ Garde les timestamps créés par Laravel
+    // On garde les timestamps Laravel (created_at / updated_at)
     public $timestamps = true;
 
-    // ✔ Colonnes que tu peux remplir
+    // Colonnes remplissables
     protected $fillable = [
-        'nom',
-<<<<<<< HEAD
-        'id_utilisateur',
-=======
         'user_id',
->>>>>>> cbb3bb4cc9bd0236d599492308c0b9a0c61ec03c
+        'nom',
     ];
 
     /**
      * Le cellier appartient à un utilisateur.
      */
-    public function utilisateur(): BelongsTo
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    /**
+     * Alias en français si jamais on l’utilise dans des vues.
+     */
+    public function utilisateur(): BelongsTo
+    {
+        return $this->user();
     }
 
     /**
@@ -46,6 +44,6 @@ class Cellier extends Model
      */
     public function bouteilles(): HasMany
     {
-        return $this->hasMany(BouteilleCellier::class, 'id_cellier');
+        return $this->hasMany(Bouteille::class, 'cellier_id');
     }
 }
