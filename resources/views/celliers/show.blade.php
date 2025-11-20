@@ -38,10 +38,40 @@
                                     {{ $bouteille->nom }}
                                 </h2>
 
-                                {{-- Badge quantité --}}
-                                <span class="inline-flex items-center justify-center rounded-full bg-primary text-white text-xs px-2 py-0.5">
-                                    x {{ $bouteille->quantite }}
-                                </span>
+                                {{-- Contrôles quantité + badge --}}
+                                <div class="flex items-center gap-2">
+                                    {{-- Bouton - --}}
+                                    <button
+                                        type="button"
+                                        class="w-8 h-8 flex items-center justify-center rounded-full border border-border-base text-sm text-text-body hover:bg-primary hover:text-white transition-colors"
+                                        data-qty-btn
+                                        data-direction="down"
+                                        data-cellier-id="{{ $cellier->id }}"
+                                        data-bottle-id="{{ $bouteille->id }}"
+                                    >
+                                        -
+                                    </button>
+
+                                    {{-- Badge quantité --}}
+                                    <span
+                                        class="inline-flex items-center justify-center rounded-full bg-primary text-white text-xs px-2 py-0.5"
+                                        data-qty-value="{{ $bouteille->id }}"
+                                    >
+                                        x {{ $bouteille->quantite }}
+                                    </span>
+
+                                    {{-- Bouton + --}}
+                                    <button
+                                        type="button"
+                                        class="w-8 h-8 flex items-center justify-center rounded-full border border-border-base text-sm text-text-body hover:bg-primary hover:text-white transition-colors"
+                                        data-qty-btn
+                                        data-direction="up"
+                                        data-cellier-id="{{ $cellier->id }}"
+                                        data-bottle-id="{{ $bouteille->id }}"
+                                    >
+                                        +
+                                    </button>
+                                </div>
                             </div>
 
                             <div class="text-sm text-text-muted space-y-1">
