@@ -13,7 +13,7 @@
         <span class='truncate font-semibold text-text-title text-md'>{{ $nom }}</span>
         <span class='text-text-muted'>{{ $prix }} $</span>
         <span class="flex justify-end"> 
-            <x-primary-btn  data-user-id="{{ $userId }}" data-bottle-id="{{ $id }}" rounded="lg" label="Ajouter" class="flex-1 add-to-cellar-btn "/>
+            <x-primary-btn data-bottle-id="{{ $id }}" rounded="lg" label="Ajouter" class="flex-1 add-to-cellar-btn "/>
             <input type=number name="quantity" min="1" max="10" value="1" class="w-16 ml-2"/>
         </span>
     </div>

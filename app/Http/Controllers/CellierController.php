@@ -225,6 +225,7 @@ class CellierController extends Controller
             ->with('success', 'La bouteille a été mise à jour avec succès.');
     }
 
+
     /**
      * Vérifie que le cellier appartient bien à l'utilisateur connecté.
      * 

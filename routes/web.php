@@ -49,7 +49,12 @@ Route::middleware('auth')->group(function () {
     Route::post('/celliers/{cellier}/bouteilles/ajout', [BouteilleManuelleController::class, 'store'])
         ->name('bouteilles.manuelles.store');
 
-    
+
+    // Pour Recuperer les cellier du user
+    Route::get('/api/celliers', function () {
+        return $user = auth()->user()->celliers()->withCount('bouteilles')->get();
+    })->name('api.celliers');
+
 
     /**
      *API de mise à jour rapide de la quantité d’une bouteille manuelle.
@@ -77,4 +82,3 @@ Route::patch(
     '/celliers/{cellier}/bouteilles/{bouteille}/quantite',
     [BouteilleManuelleController::class, 'updateQuantite']
 )->name('bouteilles.quantite.update');
-
