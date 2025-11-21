@@ -227,11 +227,14 @@ class CellierController extends Controller
             ->with('success', 'La bouteille a été mise à jour avec succès.');
     }
 
+
+    // Ajout de bouteille du catalogue au cellier via API
     public function ajoutBouteilleApi(Request $request)
     {
         // 1. Trouver la bouteille dans le catalogue
         $catalogBottle = BouteilleCatalogue::find($request->bottle_id);
 
+        // Vérifier si la bouteille du catalogue existe
         if (!$catalogBottle) {
             return response()->json([
                 'success' => false,
@@ -239,14 +242,17 @@ class CellierController extends Controller
             ], 404);
         }
 
+        // 2. Vérifier si la bouteille existe déjà dans le cellier
         $bottleExist = Bouteille::where('cellier_id', $request->cellar_id)
             ->where('nom', $catalogBottle->nom)
             ->first();
 
+        // 3. Si elle existe, augmenter la quantité
         if ($bottleExist) {
             $bottleExist->quantite += $request->quantity;
             $bottleExist->save();
 
+            // Retourner une réponse JSON indiquant que la quantité a été augmentée
             return response()->json([
                 'success' => true,
                 'message' => 'Quantité augmentée',
@@ -254,7 +260,7 @@ class CellierController extends Controller
             ]);
         }
 
-        // 2. Créer une copie dans la table "bouteilles"
+        // 4. Sinon, créer une nouvelle entrée dans le cellier
         $new = new Bouteille();
         $new->cellier_id = $request->cellar_id;
         $new->nom = $catalogBottle->nom;
@@ -263,8 +269,10 @@ class CellierController extends Controller
         $new->quantite = $request->quantity;
         $new->prix = $catalogBottle->prix;
 
+        // Enregistrer la nouvelle bouteille dans le cellier
         $new->save();
 
+        // Retourner une réponse JSON indiquant que la bouteille a été ajoutée
         return response()->json([
             'success' => true,
             'message' => 'Bouteille ajoutée avec succès',

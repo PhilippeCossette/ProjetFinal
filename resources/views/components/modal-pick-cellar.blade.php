@@ -13,5 +13,5 @@
     </span>
 
     {{-- Where all cellars will be injected --}}
-    <div id="cellar-list" class="space-y-2 flex flex-col g-4"></div>
+    <div id="cellar-list" class="space-y-2 flex flex-col g-4 overflow-auto max-h-60"></div>
 </div>
