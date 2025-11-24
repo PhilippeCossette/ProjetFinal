@@ -26,7 +26,9 @@ Route::post('/logout', [AuthController::class, 'logout'])
 // Routes protégées : seulement accessibles si la session est ouverte
 Route::middleware('auth')->group(function () {
     Route::get('/', [CatalogueController::class, 'index'])->name('bouteille.catalogue');
-    // --- Gestion des celliers ---
+
+    Route::get('/catalogue/search', [CatalogueController::class, 'search'])
+        ->name('catalogue.search');
 
     // Liste des celliers
     Route::get('/celliers', [CellierController::class, 'index'])->name('cellar.index');

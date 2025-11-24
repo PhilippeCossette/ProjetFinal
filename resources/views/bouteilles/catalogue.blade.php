@@ -4,13 +4,8 @@
 <section class="p-4">
 <x-page-header title="Catalogue des bouteilles" />
 <x-search-filter />
-<div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 mt-6">
-    @foreach ($bouteilles as $bouteille)
-        <x-bouteille-card-block :id="$bouteille->id" :nom="$bouteille->nom" :image="$bouteille->image" :prix="$bouteille->prix" />
-    @endforeach
-</div>
-<div class="mt-6">
-{{ $bouteilles->links('vendor.pagination.tailwind') }}
+ <div id="catalogueContainer">
+        @include('bouteilles._catalogue_list', ['bouteilles' => $bouteilles])
 </div>
 </section>
 <x-modal-pick-cellar />
