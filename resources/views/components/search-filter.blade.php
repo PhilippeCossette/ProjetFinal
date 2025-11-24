@@ -6,8 +6,8 @@
 {{-- Composant de recherche et filtres --}}
 <div {{ $attributes->merge(['class' => '']) }}>
     <x-input 
-        id="searchInput" 
         type="text" 
+        name="searchInput"
         placeholder="Rechercher..." 
     />
     <div class="flex gap-3 mb-4">

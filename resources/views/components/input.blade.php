@@ -35,7 +35,6 @@
             focus:ring-color-focus
             focus:ring-1
         "
-        {{ $attributes }}
     />        
 
     @error($name)

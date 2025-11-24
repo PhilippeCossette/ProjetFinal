@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\BouteilleCatalogue;
+use App\Models\Pays;
+use App\Models\TypeVin;
 
 class CatalogueController extends Controller
 {
@@ -14,8 +16,10 @@ class CatalogueController extends Controller
             ->orderBy('date_import', 'desc')
             ->paginate(10);
 
+        $pays = Pays::orderBy('nom')->get();
+        $types = TypeVin::orderBy('nom')->get();
 
-        return view('bouteilles.catalogue', compact('bouteilles'));
+        return view('bouteilles.catalogue', compact('bouteilles', 'pays', 'types'));
     }
 
     public function search(Request $request)
@@ -27,11 +31,11 @@ class CatalogueController extends Controller
         }
 
         if ($request->pays) {
-            $query->where('pays_id', $request->pays);
+            $query->where('id_pays', $request->pays);
         }
 
         if ($request->type) {
-            $query->where('type_vin_id', $request->type);
+            $query->where('id_type_vin', $request->type);
         }
 
         $bouteilles = $query->paginate(10);
