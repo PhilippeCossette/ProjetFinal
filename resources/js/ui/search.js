@@ -2,6 +2,7 @@
 const searchInput = document.getElementById("searchInput");
 const paysFilter = document.getElementById("paysFilter");
 const typeFilter = document.getElementById("typeFilter");
+const millesimeFilter = document.getElementById("millesimeFilter");
 const container = document.getElementById("catalogueContainer");
 
 const suggestionsBox = document.getElementById("suggestionsBox");
@@ -22,12 +23,15 @@ function fetchCatalogue(url = "/catalogue/search") {
         search: searchInput.value,
         pays: paysFilter.value,
         type: typeFilter.value,
+        millesime: millesimeFilter.value,
     });
 
     // Construire l'URL finale avec les paramètres de requête
     const finalUrl = url.includes("?")
         ? `${url}&${params.toString()}`
         : `${url}?${params.toString()}`;
+
+    console.log(finalUrl);
 
     // Faire la requête AJAX
     fetch(finalUrl)
@@ -78,6 +82,8 @@ const debouncedFetch = debounce(fetchCatalogue, 300);
 
 // Recherche
 searchInput.addEventListener("input", () => debouncedFetch());
+
+millesimeFilter.addEventListener("change", () => debouncedFetch());
 
 // Filtres
 paysFilter.addEventListener("change", () => debouncedFetch());

@@ -1,6 +1,7 @@
 @props([
     'pays' => [],
     'types' => [],
+    'millesimes' => [],
 ])
 
 {{-- Composant de recherche et filtres --}}
@@ -21,6 +22,13 @@
             <option value="">Toutes les Pays</option>
             @foreach($pays as $p)
                 <option value="{{ $p->id }}">{{ $p->nom }}</option>
+            @endforeach
+        </select>
+
+        <select id="millesimeFilter" class="border px-3 py-2 rounded-lg">
+            <option value="">Tous les Millésimes</option>
+            @foreach($millesimes as $m)
+                <option value="{{ $m->millesime }}">{{ $m->millesime }}</option>
             @endforeach
         </select>
 
