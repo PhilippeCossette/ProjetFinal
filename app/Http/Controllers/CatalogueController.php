@@ -11,17 +11,22 @@ class CatalogueController extends Controller
 {
     public function index()
     {
-        // Récupère les 10 dernières bouteilles importées avec leurs relations
+
         $bouteilles = BouteilleCatalogue::with(['pays', 'typeVin'])
-            ->orderBy('date_import', 'desc')
+            ->orderBy('nom')
             ->paginate(10);
 
         $pays = Pays::orderBy('nom')->get();
         $types = TypeVin::orderBy('nom')->get();
+        $millesimes = BouteilleCatalogue::select('millesime')
+            ->whereNotNull('millesime')
+            ->distinct()
+            ->orderBy('millesime', 'desc')
+            ->get();
 
         $count = $bouteilles->total();
 
-        return view('bouteilles.catalogue', compact('bouteilles', 'pays', 'types', 'count'));
+        return view('bouteilles.catalogue', compact('bouteilles', 'pays', 'types', 'millesimes', 'count'));
     }
 
     public function search(Request $request)
@@ -40,7 +45,30 @@ class CatalogueController extends Controller
             $query->where('id_type_vin', $request->type);
         }
 
+        if ($request->millesime) {
+            $query->where('millesime', $request->millesime);
+        }
+
+        if ($request->prix_min && $request->prix_max) {
+            $query->whereBetween('prix', [$request->prix_min, $request->prix_max]);
+        } elseif ($request->prix_min) {
+            $query->where('prix', '>=', $request->prix_min);
+        } elseif ($request->prix_max) {
+            $query->where('prix', '<=', $request->prix_max);
+        }
+
+        $sortBy = $request->sort_by;
+        $sortDirection = $request->sort_direction;
+
+        if ($sortBy && in_array($sortDirection, ['asc', 'desc'])) {
+            $query->orderBy($sortBy, $sortDirection);
+        }
+
+
+
         $bouteilles = $query->paginate(10);
+
+
         $count = $bouteilles->total();
 
         return response()->json([
