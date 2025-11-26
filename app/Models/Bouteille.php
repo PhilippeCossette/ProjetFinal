@@ -4,64 +4,50 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Bouteille extends Model
 {
     use HasFactory;
 
+    protected $table = 'bouteilles';
+
     /**
-     * Attributs remplissables en création/mise à jour.
+     * Attributs remplissables en masse.
+     *
+     * On inclut ici tous les champs utilisés dans tes contrôleurs
+     * + ceux ajoutés par les migrations récentes (type, millesime, code_saq, etc.).
      */
     protected $fillable = [
-        'cellier_id', 
-        'nom',        
-        'pays',       
-        'format',     
-        'quantite',  
+        'cellier_id',
+        'nom',
+        'pays',
+        'type',
+        'millesime',
+        'format',
+        'quantite',
         'prix',
+        'commentaire',
+        'code_saq',
         'note_degustation',
         'rating',
-        'code_saq',
     ];
 
     /**
-     * Ici on force le prix à être un décimal avec 2 chiffres
+     * Casts pour certains types.
      */
-    protected function casts(): array
-    {
-        return [
-            'prix' => 'decimal:2',
-            'rating' => 'integer',
-        ];
-    }
+    protected $casts = [
+        'prix'       => 'decimal:2',
+        'quantite'   => 'integer',
+        'millesime'  => 'integer',
+        'rating'     => 'integer',
+    ];
 
     /**
-     * Relation : cette bouteille appartient à un cellier.
+     * Une bouteille appartient à un cellier.
      */
-    public function cellier()
+    public function cellier(): BelongsTo
     {
-        return $this->belongsTo(Cellier::class);
+        return $this->belongsTo(Cellier::class, 'cellier_id');
     }
-
-    /**
-     * Récupère l'image de la bouteille depuis le catalogue si elle existe.
-     * 
-     * @return string|null URL de l'image ou null si non trouvée
-     */
-    public function getImageFromCatalogue()
-    {
-        // Cherche une bouteille du catalogue avec le même nom
-        $catalogueBouteille = \App\Models\BouteilleCatalogue::where('nom', $this->nom)->first();
-        
-        if ($catalogueBouteille && $catalogueBouteille->image) {
-            return $catalogueBouteille->image;
-        }
-        
-        return null;
-    }
-
-    public function addToCellier(Cellier $cellier, array $attributes)
-    {
-        
-    }   
 }
