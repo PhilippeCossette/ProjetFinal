@@ -137,7 +137,7 @@
 
             @if($isCatalogueMode)
                 {{-- Formulaire d'ajout au cellier --}}
-                <form class="flex gap-3 flex-row-reverse flex-wrap justify-end add-to-cellar-form stop-link-propagation w-full">
+                <form class="flex gap-3 flex-row-reverse flex-wrap justify-end add-to-cellar-form w-full">
                     <input 
                         type="hidden" 
                         name="bottle_id" 
@@ -154,7 +154,7 @@
                     />
 
                     <button 
-                        type="submit"
+                        type="button"
                         class="flex-3 add-to-cellar-btn bg-primary active:bg-primary-active hover:bg-primary-hover animation duration-200 text-white rounded-lg px-4 py-2"
                         data-bottle-id="{{ $id }}"
                     >

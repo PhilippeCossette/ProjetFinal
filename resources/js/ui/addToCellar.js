@@ -4,7 +4,6 @@ const panneauCellier = document.getElementById("addWineBtnContainer");
 
 // Vérifier que les éléments existent avant de continuer
 if (boutonFermer && panneauCellier) {
-
     let celliersPrecharges = null;
     let idBouteilleActive = null;
     let quantiteActive = 1;
@@ -22,14 +21,17 @@ if (boutonFermer && panneauCellier) {
     document.addEventListener("click", (e) => {
         const bouton = e.target.closest(".add-to-cellar-btn");
         if (!bouton) return; // pas un bouton ajouter
-
         e.preventDefault();
 
         const formulaire = bouton.closest("form");
 
-        idBouteilleActive = formulaire.querySelector('input[name="bottle_id"]').value;
+        idBouteilleActive = formulaire.querySelector(
+            'input[name="bottle_id"]'
+        ).value;
         quantiteActive =
-            parseInt(formulaire.querySelector('input[name="quantity"]').value) || 1;
+            parseInt(
+                formulaire.querySelector('input[name="quantity"]').value
+            ) || 1;
 
         ouvrirPanneau();
     });
@@ -70,7 +72,9 @@ if (boutonFermer && panneauCellier) {
                                 cellier.bouteilles_count == 0
                                     ? `<p class="text-gray-400 italic">Aucune bouteille</p>`
                                     : `${cellier.bouteilles_count} Bouteille${
-                                          cellier.bouteilles_count > 1 ? "s" : ""
+                                          cellier.bouteilles_count > 1
+                                              ? "s"
+                                              : ""
                                       }`
                             }
                         </div>
@@ -82,9 +86,11 @@ if (boutonFermer && panneauCellier) {
 
     // Clique sur un cellier dans le panneau
     document.addEventListener("click", async (e) => {
+        console.log("test");
+
         const boite = e.target.closest(".cellar-box");
         if (!boite) return;
-        
+
         // Ne prévenir le comportement par défaut que si c'est un cellar-box du modal (avec data-cellar-id)
         // Cela permet aux liens cellar-box normaux de la page d'index de fonctionner normalement
         if (!boite.dataset.cellarId) return;
@@ -103,6 +109,7 @@ if (boutonFermer && panneauCellier) {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
+                "Accept": "application/json", 
                 "X-CSRF-TOKEN": jetonCsrf,
             },
             body: JSON.stringify({
@@ -113,14 +120,20 @@ if (boutonFermer && panneauCellier) {
         });
 
         const donnees = await reponse.json();
-        
+
         if (donnees.success) {
             if (window.showToast) {
-                window.showToast(donnees.message || "Bouteille ajoutée avec succès", "success");
+                window.showToast(
+                    donnees.message || "Bouteille ajoutée avec succès",
+                    "success"
+                );
             }
         } else {
             if (window.showToast) {
-                window.showToast(donnees.message || "Erreur lors de l'ajout", "error");
+                window.showToast(
+                    donnees.message || "Erreur lors de l'ajout",
+                    "error"
+                );
             }
         }
 
