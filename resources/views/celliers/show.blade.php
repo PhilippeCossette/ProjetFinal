@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.app') 
 
 @section('title', 'Mon cellier – ' . $cellier->nom)
 
@@ -13,11 +13,17 @@
     />
 
     @php
-        // Valeurs actuelles (si un jour tu veux pré-remplir les champs)
+        // Valeurs actuelles 
         $currentNom       = $nom ?? '';
         $currentType      = $type ?? '';
         $currentPays      = $pays ?? '';
         $currentMillesime = $millesime ?? '';
+
+        // Est-ce qu'il y a au moins un filtre actif ?
+        $hasFilters = !empty($currentNom)
+            || !empty($currentPays)
+            || !empty($currentType)
+            || !empty($currentMillesime);
     @endphp
 
     {{-- BARRE RECHERCHE + BOUTON FILTRE (style catalogue) --}}
@@ -63,9 +69,15 @@
     <div id="cellarBottlesContainer">
         <div class="bg-card border border-border-base rounded-xl shadow-md p-6 mt-4">
             @if ($cellier->bouteilles->isEmpty())
-                <p class="text-text-muted">
-                    Ce cellier est encore vide. Utilisez le bouton « Ajouter une bouteille » pour commencer.
-                </p>
+                @if ($hasFilters)
+                    <p class="text-text-muted">
+                        Aucun résultat trouvé pour ces filtres.
+                    </p>
+                @else
+                    <p class="text-text-muted">
+                        Ce cellier est encore vide. Utilisez le bouton « Ajouter une bouteille » pour commencer.
+                    </p>
+                @endif
             @else
                 <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
                     @foreach ($cellier->bouteilles as $bouteille)
