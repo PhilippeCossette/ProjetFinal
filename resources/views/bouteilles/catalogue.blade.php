@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('title', 'Catalogue des bouteilles')
+@section('content')
 <section class="p-4">
 <x-page-header title="Catalogue des bouteilles" />
 <x-search-filter :pays="$pays" :types="$types" :millesimes="$millesimes" />
@@ -10,6 +11,4 @@
 </div>
 </section>
 <x-modal-pick-cellar />
-@section('content')
-
 @endsection
