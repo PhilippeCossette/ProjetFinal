@@ -78,7 +78,7 @@
 
     {{-- CONTENEUR MIS À JOUR PAR LE JS (AJAX) --}}
     <div id="cellarBottlesContainer">
-        <div class="bg-card border border-border-base rounded-xl shadow-md p-6 mt-4">
+        <div>
             @if ($cellier->bouteilles->isEmpty())
                 @if ($hasFilters)
                     <p class="text-text-muted">
@@ -115,7 +115,7 @@
 {{-- Fenêtre flottante "Ajouter un vin" --}}
 <div
     id="addWineBtnContainer"
-    class="fixed z-50 bottom-0 left-0 w-full p-4 pt-10 bg-card border border-border-base shadow-lg rounded-t-lg transform translate-y-full transition-transform duration-300"
+    class="fixed z-50 bottom-0 left-0 w-full p-4 py-10 bg-card border border-border-base shadow-lg rounded-t-lg transform translate-y-full transition-transform duration-300"
 >
     <span class="flex items-center justify-between mb-4">
         <h1 class="text-3xl text-heading font-heading">Ajouter un vin</h1>
