@@ -64,7 +64,6 @@ if (boutonFermer && panneauCellier) {
         return reponse.json();
     }
 
-
     // Afficher un message de chargement
     function afficherChargement(container) {
         container.innerHTML = `
@@ -78,6 +77,15 @@ if (boutonFermer && panneauCellier) {
         const listeCelliers = document.getElementById("cellar-list");
         listeCelliers.innerHTML = "";
 
+        if (celliers.length === 0) {
+            listeCelliers.innerHTML = `
+                <p class="text-gray-400 italic">
+                    Vous n'avez pas encore de cellier. Veuillez en créer un d'abord.
+                </p>
+                <a href="/celliers/create" class="bg-primary text-white px-4 py-2 rounded-lg w-40 text-center">Créer un cellier</a>
+            `;
+            return;
+        }
         celliers.forEach((cellier) => {
             listeCelliers.innerHTML += `
                 <a 
