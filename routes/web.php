@@ -1,4 +1,4 @@
-<?php
+<?php 
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
@@ -9,7 +9,7 @@ use App\Http\Controllers\BouteilleManuelleController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\Auth;
-
+use App\Models\User;
 
 // Routes accessibles seulement aux invités (non connectés)
 Route::middleware('guest')->group(function () {
@@ -63,7 +63,6 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/api/ajout/cellier', [CellierController::class, 'ajoutBouteilleApi'])->name('api.ajout.cellier');
     
-
     // Pour récupérer les celliers du user
     Route::get('/api/celliers', function () {
         /** @var User $user */   
@@ -75,19 +74,17 @@ Route::middleware('auth')->group(function () {
             ->get();
     })->name('api.celliers');
 
-
     // Recherche des bouteilles dans un cellier.
     Route::get('/celliers/{cellier}/search', [CellierController::class, 'search'])
         ->name('celliers.search');
 
     /**
-     * API de mise à jour rapide de la quantité d’une bouteille manuelle.
+     * API de mise à jour rapide de la quantité d'une bouteille.
      */
     Route::patch(
         '/celliers/{cellier}/bouteilles/{bouteille}/quantite',
         [BouteilleManuelleController::class, 'updateQuantite']
-    )->name('bouteilles.manuelles.quantite');
-    
+    )->name('bouteilles.quantite.update');
 
     // Suppression de bouteille dans un cellier
     Route::delete('/celliers/{cellier}/bouteilles/{bouteille}', [CellierController::class, 'deleteBottle'])

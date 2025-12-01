@@ -8,6 +8,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\HasMany; 
 use App\Models\Cellier;
+use App\Models\ListeAchat;
+
 
 class User extends Authenticatable
 {
@@ -63,7 +65,16 @@ class User extends Authenticatable
     }
 
     /**
-     * Helper simple pour vérifier le rôle admin.
+     * Liste d'achat liée à l'utilisateur.
+     */
+    public function listeAchat(): HasMany
+    {
+        return $this->hasMany(ListeAchat::class, 'user_id', 'id');
+    }
+
+
+    /**
+     * Vérifier le rôle admin.
      */
     public function isAdmin(): bool
     {
