@@ -334,7 +334,7 @@ class CellierController extends Controller
         }
 
         $bouteilleCatalogue = BouteilleCatalogue::where('nom', $bouteille->nom)
-            ->with(['typeVin', 'pays'])
+            ->with(['typeVin', 'pays', 'region'])
             ->first();
 
         $donnees = [

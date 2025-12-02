@@ -1,6 +1,7 @@
 @props([  
     'pays' => [],
     'types' => [],
+    'regions' => [],
     'millesimes' => [],
     // 'catalogue' par défaut, 'cellier' pour ton écran de cellier
     'mode' => 'catalogue',
@@ -103,6 +104,16 @@
                     <option value="{{ $typeValue }}">{{ $t->nom }}</option>
                 @endforeach
             </select>
+
+            {{-- Select pour Région (seulement pour le catalogue) --}}
+            @if($mode === 'catalogue' && !empty($regions))
+                <select id="regionFilter" class="border px-5 py-3 rounded-lg" aria-label="Filtrer par région">
+                    <option value="">Toutes les régions</option>
+                    @foreach($regions as $r)
+                        <option value="{{ $r->id }}">{{ $r->nom }}</option>
+                    @endforeach
+                </select>
+            @endif
 
             {{-- Inputs pour Prix min / max --}}
             <div class="flex w-full" role="group" aria-label="Plage de prix">
