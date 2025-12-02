@@ -105,12 +105,16 @@
                 @endforeach
             </select>
 
-            {{-- Select pour Région (seulement pour le catalogue) --}}
-            @if($mode === 'catalogue' && !empty($regions))
+            {{-- Select pour Région --}}
+            @if(isset($regions) && !empty($regions))
                 <select id="regionFilter" class="border px-5 py-3 rounded-lg" aria-label="Filtrer par région">
                     <option value="">Toutes les régions</option>
                     @foreach($regions as $r)
-                        <option value="{{ $r->id }}">{{ $r->nom }}</option>
+                        @php
+                            // catalogue = id_region / cellier = texte de la région
+                            $regionValue = $mode === 'cellier' ? $r->nom : $r->id;
+                        @endphp
+                        <option value="{{ $regionValue }}">{{ $r->nom }}</option>
                     @endforeach
                 </select>
             @endif

@@ -15,6 +15,7 @@
     <x-search-filter
         :pays="$pays"
         :types="$types"
+        :regions="$regions"
         :millesimes="$millesimes"
         mode="cellier" 
         data-search-url="{{ route('celliers.search', $cellier) }}"
