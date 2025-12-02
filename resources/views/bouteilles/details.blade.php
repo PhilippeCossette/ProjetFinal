@@ -127,6 +127,25 @@
                             </div>
                         @endif
 
+                        {{-- Lien SAQ.com --}}
+                        @if(isset($donnees['url_saq']) && $donnees['url_saq'])
+                            <div class="border-b border-border-base pb-3">
+                                <span class="text-sm font-medium text-text-muted uppercase tracking-wide mb-2 block">Voir sur SAQ.com</span>
+                                <a 
+                                    href="{{ $donnees['url_saq'] }}" 
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                    class="inline-flex items-center gap-2 text-primary hover:text-primary-hover hover:underline font-semibold transition-colors"
+                                    aria-label="Ouvrir la page de la bouteille sur SAQ.com dans un nouvel onglet"
+                                >
+                                    <span>Visiter la page SAQ</span>
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                                    </svg>
+                                </a>
+                            </div>
+                        @endif
+
                         {{-- Quantité (seulement pour les bouteilles du cellier) --}}
                         @if(!$isCatalogue && isset($donnees['quantite']))
                             <div class="border-b border-border-base pb-3">
@@ -234,6 +253,20 @@
                                 :route="route('bouteilles.edit', [$cellier, $bouteille])"
                                 label="Modifier"
                             />
+                        @endif
+
+                        {{-- Bouton Partager (seulement pour les bouteilles du cellier) --}}
+                        @if(!$isCatalogue)
+                            <button
+                                type="button"
+                                id="shareBottleBtn"
+                                class="flex items-center gap-2 px-4 py-2 bg-button-default border-2 border-primary text-primary font-semibold rounded-lg hover:bg-button-hover hover:text-white active:bg-primary-active transition-colors duration-300"
+                                data-bouteille-id="{{ $bouteille->id }}"
+                                aria-label="Partager cette bouteille"
+                            >
+                                <x-dynamic-component :component="'lucide-share-2'" class="w-5 h-5" />
+                                <span>Partager</span>
+                            </button>
                         @endif
                     </div>
 
