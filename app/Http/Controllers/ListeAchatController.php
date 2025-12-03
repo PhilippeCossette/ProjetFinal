@@ -14,11 +14,11 @@ class ListeAchatController extends Controller
     public function index()
     {
         $items = auth()->user()
-        ->listeAchat()
-        ->with('bouteilleCatalogue')
-        ->orderBy('achete')
-        ->orderBy('date_ajout', 'desc')
-        ->get();
+            ->listeAchat()
+            ->with('bouteilleCatalogue')
+            ->orderBy('achete')
+            ->orderBy('date_ajout', 'desc')
+            ->get();
 
         return view('liste_achat.index', compact('items'));
     }
@@ -30,28 +30,40 @@ class ListeAchatController extends Controller
     {
         $request->validate([
             'bouteille_catalogue_id' => 'required|exists:bouteille_catalogue,id',
+            'quantite' => 'nullable|integer|min:1'
         ]);
 
         $user = auth()->user();
+        $bottleId = $request->bouteille_catalogue_id;
+        $qty = $request->quantite ?? 1;
 
-        // Vérifier si l'article existe déjà
-        $existing = ListeAchat::where('user_id', $user->id)
-            ->where('bouteille_catalogue_id', $request->bouteille_catalogue_id)
+        // Vérifier si déjà existant
+        $item = ListeAchat::where('user_id', $user->id)
+            ->where('bouteille_catalogue_id', $bottleId)
             ->first();
 
-        if ($existing) {
-            $existing->increment('quantite');
-            return back()->with('success', 'Quantité augmentée dans votre liste d’achat.');
+        if ($item) {
+            $item->increment('quantite', $qty);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Quantité augmentée dans votre liste d’achat.'
+            ]);
         }
 
+        // Sinon créer l'entrée
         ListeAchat::create([
             'user_id' => $user->id,
-            'bouteille_catalogue_id' => $request->bouteille_catalogue_id,
-            'quantite' => 1,
+            'bouteille_catalogue_id' => $bottleId,
+            'quantite' => $qty,
         ]);
 
-        return back()->with('success', 'Bouteille ajoutée à votre liste d’achat.');
+        return response()->json([
+            'success' => true,
+            'message' => 'Bouteille ajoutée à votre liste d’achat.'
+        ]);
     }
+
 
     /**
      * Modifier quantité ou statut acheté
