@@ -168,5 +168,25 @@
                 </form>    
             </div>
         @endif
+
+        {{-- Bouton d'ajout à la liste d'achat (mode cellier) --}}
+        @if($isCellierMode)
+        <button 
+            type="button"
+            class="add-to-wishlist-cellar flex items-center justify-center absolute top-1 right-10 
+                bg-white/90 hover:bg-white/40 active:bg-white/20 shadow-md border border-border-base 
+                p-2 rounded-full transition z-20"
+            data-bouteille-id="{{ $bouteilleId }}"
+            data-quantite="{{ $quantite }}"
+            data-code-saq="{{ $codeSaq ?? '' }}"
+            aria-label="Ajouter à la liste d’achat"
+        >
+            <x-dynamic-component 
+                :component="'lucide-shopping-cart'" 
+                class="w-5 h-5 text-primary"
+            />
+        </button>
+        @endif
+
     </div>
 </div>
