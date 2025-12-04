@@ -117,6 +117,11 @@ Route::middleware('auth')->group(function () {
         [CellierController::class, 'updateNote']
     )->name('bouteilles.note.update');
 
+    Route::delete(
+        '/celliers/{cellier}/bouteilles/{bouteille}/note',
+        [CellierController::class, 'deleteNote']
+    )->name('bouteilles.note.delete');
+
     // PROFIL
     Route::get('/profil', [ProfileController::class, 'index'])->name('profile.index');
     Route::post('/profil/update-info', [ProfileController::class, 'updateInfo'])->name('profile.updateInfo');
@@ -135,6 +140,10 @@ Route::middleware('auth')->group(function () {
 
     Route::delete('/liste-achat/{item}', [ListeAchatController::class, 'destroy'])
         ->name('listeAchat.destroy');
+        
+    Route::post('/liste-achat/{item}/transfer', [ListeAchatController::class, 'transfer'])
+    ->name('listeAchat.transfer');
+    
 
     // PARTAGE
     // Générer un lien de partage unique pour une bouteille
