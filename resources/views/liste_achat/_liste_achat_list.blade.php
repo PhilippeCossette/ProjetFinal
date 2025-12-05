@@ -1,4 +1,10 @@
 <div>
+    @php
+        // Map des bouteilles catalogue -> bouteille de cellier (si déjà dans un cellier)
+        // Ex: $cellarMap[ID_CATALOGUE] = ['cellier_id' => 12, 'bouteille_id' => 34]
+        $cellarMap = $cellarMap ?? [];
+    @endphp
+
     {{-- Nombre de résultats --}}
     <p class="mb-2 text-md" role="nombre-resultats">
         <span class="font-semibold">{{ $count }}</span>
@@ -13,11 +19,32 @@
         @forelse ($items as $item)
             @php
                 $b = $item->bouteilleCatalogue;
+
+                // Sécurité : si la bouteille catalogue a été supprimée
+                if (!$b) {
+                    continue;
+                }
+
+                // On regarde si cette bouteille catalogue est déjà présente dans un cellier
+                $mapEntry = $cellarMap[$item->bouteille_catalogue_id] ?? null;
+
+                if ($mapEntry) {
+                    // Elle existe dans un cellier → lien vers la fiche "cellier"
+                    $detailUrl = route('bouteilles.show', [
+                        $mapEntry['cellier_id'],
+                        $mapEntry['bouteille_id'],
+                    ]);
+                } else {
+                    // Sinon → lien vers la fiche du catalogue
+                    $detailUrl = route('catalogue.show', $b->id);
+                }
             @endphp
 
-            {{-- Carte EXACTEMENT comme dans index.blade.php --}}
-            <div id="bouteille-card" class="relative flex flex-col rounded-2xl border border-gray-200 bg-white/80 shadow-sm 
-                        hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 overflow-hidden" data-id="{{ $item->id }}">
+            {{-- Carte EXACTEMENT comme dans index.blade.php, mais image cliquable --}}
+            <div id="bouteille-card"
+                 class="relative flex flex-col rounded-2xl border border-gray-200 bg-white/80 shadow-sm 
+                        hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 overflow-hidden"
+                 data-id="{{ $item->id }}">
 
                 {{-- Menu (3 points) --}}
                 <x-dropdown-action
@@ -26,17 +53,19 @@
                     deleteUrl="{{ route('listeAchat.destroy', $item) }}"
                     transferUrl="{{ route('listeAchat.transfer', $item) }}" />
 
-                {{-- Image --}}
-                <div class="max-h-[160px] bg-gray-200 border-b border-gray-100 flex items-center justify-center 
-                            overflow-hidden aspect-3/4 py-3">
-                    @if ($b->thumbnail ?? $b->image)
-                        <img src="{{ $b->thumbnail ?? $b->image }}"
-                            alt="Image {{ $b->nom }}"
-                            class="max-w-[96px] max-h-[160px] object-contain">
-                    @else
-                        <svg  version="1.0" xmlns="http://www.w3.org/2000/svg"  width="90.000000pt" height="90.000000pt" viewBox="0 0 300.000000 300.000000"  preserveAspectRatio="xMidYMid meet">  <g transform="translate(0.000000,300.000000) scale(0.050000,-0.050000)" fill="#757575" stroke="none"> <path d="M2771 5765 c-8 -19 -13 -325 -12 -680 3 -785 6 -767 -189 -955 -231 -222 -214 -70 -225 -2018 -10 -1815 -11 -1791 100 -1831 215 -77 1028 -70 1116 10 73 66 77 168 80 1839 4 1928 18 1815 -254 2058 -141 126 -147 164 -147 878 0 321 -6 618 -13 659 l-12 75 -215 0 c-187 0 -218 -5 -229 -35z"/> </g> </svg> 
-                    @endif
-                </div>
+                {{-- Image cliquable (vers fiche produit : cellier OU catalogue) --}}
+                <a href="{{ $detailUrl }}" aria-label="Voir les détails de {{ $b->nom }}">
+                    <div class="max-h-[160px] bg-gray-200 border-b border-gray-100 flex items-center justify-center 
+                                overflow-hidden aspect-3/4 py-3">
+                        @if ($b->thumbnail ?? $b->image)
+                            <img src="{{ $b->thumbnail ?? $b->image }}"
+                                alt="Image {{ $b->nom }}"
+                                class="max-w-[96px] max-h-[160px] object-contain">
+                        @else
+                            <svg  version="1.0" xmlns="http://www.w3.org/2000/svg"  width="90.000000pt" height="90.000000pt" viewBox="0 0 300.000000 300.000000"  preserveAspectRatio="xMidYMid meet">  <g transform="translate(0.000000,300.000000) scale(0.050000,-0.050000)" fill="#757575" stroke="none"> <path d="M2771 5765 c-8 -19 -13 -325 -12 -680 3 -785 6 -767 -189 -955 -231 -222 -214 -70 -225 -2018 -10 -1815 -11 -1791 100 -1831 215 -77 1028 -70 1116 10 73 66 77 168 80 1839 4 1928 18 1815 -254 2058 -141 126 -147 164 -147 878 0 321 -6 618 -13 659 l-12 75 -215 0 c-187 0 -218 -5 -229 -35z"/> </g> </svg> 
+                        @endif
+                    </div>
+                </a>
 
                 {{-- Texte --}}
                 <div class="flex-1 p-4 flex flex-col gap-2">
