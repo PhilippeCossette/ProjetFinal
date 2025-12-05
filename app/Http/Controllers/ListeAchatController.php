@@ -161,6 +161,30 @@ class ListeAchatController extends Controller
      */
     public function update(Request $request, ListeAchat $item)
     {
+        // Si la requête contient 'direction', gérer l'incrémentation/décrémentation comme le cellier
+        if ($request->has('direction')) {
+            $direction = $request->input('direction');
+
+            if ($direction === 'up') {
+                $item->quantite++;
+            } elseif ($direction === 'down' && $item->quantite > 1) {
+                $item->quantite--;
+            } else {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Direction invalide',
+                ], 422);
+            }
+
+            $item->save();
+
+            return response()->json([
+                'success' => true,
+                'quantite' => $item->quantite,
+            ]);
+        }
+
+        // Sinon, mise à jour normale (quantite ou achete)
         $item->update($request->only(['quantite', 'achete']));
 
         // Si c'est une requête AJAX/JSON, retourner une réponse JSON

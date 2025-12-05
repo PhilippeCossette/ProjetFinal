@@ -22,7 +22,16 @@ if (buttons.length) {
                 return;
             }
 
+            // Empêcher les clics multiples pendant qu'une requête est en cours
+            if (display.dataset.loading === "true") {
+                return;
+            }
+
             const oldText = display.textContent;
+            
+            // Marquer comme en cours de chargement
+            display.dataset.loading = "true";
+            
             // Indicateur de chargement (Spinner)
             const spinnerTemplate = document.getElementById("spinner-inline-template");
             if (spinnerTemplate) {
@@ -39,6 +48,7 @@ if (buttons.length) {
                     ></div>
                 `;
             }
+            
             // Appel API pour mettre à jour la quantité
             fetch(url, {
                 method: "PATCH",
@@ -63,12 +73,14 @@ if (buttons.length) {
                     } else {
                         display.textContent = oldText;
                     }
-
-                  
+                    // Réinitialiser le flag de chargement
+                    display.dataset.loading = "false";
                 })
                 .catch((err) => {
                     console.error("Erreur quantité:", err);
                     display.textContent = oldText;
+                    // Réinitialiser le flag de chargement en cas d'erreur
+                    display.dataset.loading = "false";
                 });
         });
     });

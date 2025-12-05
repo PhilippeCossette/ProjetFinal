@@ -1,39 +1,46 @@
-document.addEventListener("DOMContentLoaded", () => {
-    /* ============================================================
-       GESTION QUANTITÉ (+ / -)
-       ============================================================ */
-    document.querySelectorAll(".wishlist-qty-btn").forEach((btn) => {
-        // Empêche double binding
-        if (btn.dataset.jsBound === "true") return;
-        btn.dataset.jsBound = "true";
-
+// Gestion des quantités de bouteilles dans la liste d'achat
+// Utilise la même logique que bottleQuantity.js du cellier
+const wishlistButtons = document.querySelectorAll(".wishlist-qty-btn");
+if (wishlistButtons.length) {
+    const csrfMeta = document.querySelector('meta[name="csrf-token"]');
+    const csrfToken = csrfMeta ? csrfMeta.getAttribute("content") : "";
+    
+    // Ajout des écouteurs d'événements aux boutons
+    wishlistButtons.forEach((btn) => {
         btn.addEventListener("click", () => {
-            const container = btn.parentElement;
-            const display = container.querySelector(".wishlist-qty-display");
+            const url = btn.dataset.url;
+            const direction = btn.dataset.direction;
+            const itemId = btn.dataset.itemId;
 
-            if (!display) {
-                console.error("wishlist-qty-display introuvable !");
+            const display = document.querySelector(
+                `.wishlist-qty-display[data-item-id="${itemId}"]`
+            );
+
+            if (!url || !direction || !display) {
+                console.error(
+                    "Données manquantes pour la mise à jour de quantité."
+                );
                 return;
             }
 
-            const oldValue = parseInt(display.textContent);
-            let value = oldValue;
-
-            // Up / Down
-            if (btn.dataset.direction === "up") {
-                value++;
-            } else if (btn.dataset.direction === "down" && value > 1) {
-                value--;
+            // Empêcher les clics multiples pendant qu'une requête est en cours
+            if (display.dataset.loading === "true") {
+                return;
             }
 
-            // Afficher le spinner pendant le chargement
+            const oldText = display.textContent;
+            
+            // Marquer comme en cours de chargement
+            display.dataset.loading = "true";
+            
+            // Indicateur de chargement (Spinner)
             const spinnerTemplate = document.getElementById("spinner-inline-template");
             if (spinnerTemplate) {
                 const clone = spinnerTemplate.content.cloneNode(true);
                 display.innerHTML = "";
                 display.appendChild(clone);
             } else {
-                // Fallback si le template n'existe pas
+                // Fallback if template doesn't exist
                 display.innerHTML = `
                     <div 
                         class="inline-block w-6 h-6 border-2 border-neutral-200 border-t-primary rounded-full animate-spin" 
@@ -42,41 +49,45 @@ document.addEventListener("DOMContentLoaded", () => {
                     ></div>
                 `;
             }
-
-            // Construction FormData pour Laravel
-            const formData = new FormData();
-            formData.append("_method", "PUT");
-            formData.append("quantite", value);
-
-            // Requête backend
-            fetch(btn.dataset.url, {
-                method: "POST",
+            
+            // Appel API pour mettre à jour la quantité (PATCH avec direction comme le cellier)
+            fetch(url, {
+                method: "PATCH",
                 headers: {
-                    "X-CSRF-TOKEN": document.querySelector(
-                        'meta[name="csrf-token"]'
-                    ).content,
+                    "Content-Type": "application/json",
                     Accept: "application/json",
+                    "X-CSRF-TOKEN": csrfToken,
                 },
-                body: formData,
+                body: JSON.stringify({ direction }),
             })
-            .then(res => {
-                if (res.ok) {
-                    // Mettre à jour l'affichage avec la nouvelle valeur
-                    display.textContent = value;
-                    showToast("Quantité mise à jour", "success");
-                } else {
-                    // Restaurer l'ancienne valeur en cas d'erreur
-                    display.textContent = oldValue;
-                    showToast("Erreur lors de la mise à jour", "error");
-                }
-            })
-            .catch(() => {
-                // Restaurer l'ancienne valeur en cas d'erreur réseau
-                display.textContent = oldValue;
-                showToast("Erreur réseau", "error");
-            });
+                .then((res) => {
+                    console.log("Réponse API quantité:", res.status);
+                    if (!res.ok) {
+                        throw new Error("Réponse serveur non OK");
+                    }
+                    return res.json();
+                })
+                .then((data) => {
+                    console.log("Données JSON:", data);
+                    if (data.success && typeof data.quantite !== "undefined") {
+                        display.textContent = `${data.quantite}`;
+                    } else {
+                        display.textContent = oldText;
+                    }
+                    // Réinitialiser le flag de chargement
+                    display.dataset.loading = "false";
+                })
+                .catch((err) => {
+                    console.error("Erreur quantité:", err);
+                    display.textContent = oldText;
+                    // Réinitialiser le flag de chargement en cas d'erreur
+                    display.dataset.loading = "false";
+                });
         });
     });
+}
+
+document.addEventListener("DOMContentLoaded", () => {
 
     /* ============================================================
        CHECKBOX : MARQUER COMME ACHETÉ

@@ -143,6 +143,9 @@ Route::middleware('auth')->group(function () {
 
     Route::put('/liste-achat/{item}', [ListeAchatController::class, 'update'])
         ->name('listeAchat.update');
+    
+    Route::patch('/liste-achat/{item}', [ListeAchatController::class, 'update'])
+        ->name('listeAchat.update.patch');
 
     Route::delete('/liste-achat/{item}', [ListeAchatController::class, 'destroy'])
         ->name('listeAchat.destroy');
@@ -156,8 +159,13 @@ Route::middleware('auth')->group(function () {
 
         $items = $user->listeAchat()->with('bouteilleCatalogue')->get();
 
-        $totalPrice = $items->sum(fn($item) => $item->bouteilleCatalogue->prix * $item->quantite);
-        $totalItem = $items->sum(fn($item) => $item->quantite);
+        $totalPrice = $items->sum(function($item) {
+            if (!$item->bouteilleCatalogue) {
+                return 0;
+            }
+            return (float)($item->bouteilleCatalogue->prix ?? 0) * (int)($item->quantite ?? 0);
+        });
+        $totalItem = $items->sum(fn($item) => (int)($item->quantite ?? 0));
         $avgPrice = $items->count() ? $totalPrice / $items->count() : 0;
 
         return response()->json([
