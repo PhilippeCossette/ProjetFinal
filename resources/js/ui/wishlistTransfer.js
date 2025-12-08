@@ -105,7 +105,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     .map(
                         (cellier) => `
                     <button 
-                        class="cellier-option w-full text-left px-4 py-3 rounded-lg border border-gray-200 hover:border-primary hover:bg-primary/5 transition-all"
+                        class="cellier-option w-full text-left px-4 py-3 rounded-lg border border-gray-200 hover:border-primary hover:bg-primary/5 transition-all cursor-pointer"
                         data-cellier-id="${cellier.id}"
                     >
                         <div class="font-medium text-gray-900">${cellier.nom}</div>

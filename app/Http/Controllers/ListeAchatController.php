@@ -123,8 +123,8 @@ class ListeAchatController extends Controller
             'types',
             'regions',
             'millesimes',
-            'cellarMap',   // 🔸 on l’envoie à la vue
-        ));
+            'cellarMap',   // 🔸 on l'envoie à la vue
+        ))->with('isSearching', false); // Pas de recherche active sur la page initiale
     }
 
 
@@ -539,11 +539,17 @@ class ListeAchatController extends Controller
             }
         }
 
+        // Vérifier si une recherche/filtre est active
+        $hasActiveSearch = $request->search || $request->pays || $request->type || 
+                          $request->region || $request->millesime || 
+                          $request->prix_min || $request->prix_max;
+
         return response()->json([
             'html' => view('liste_achat._liste_achat_list', [
                 'items'     => $items,
                 'count'     => $count,
-                'cellarMap' => $cellarMap, 
+                'cellarMap' => $cellarMap,
+                'isSearching' => $hasActiveSearch, // Indique si une recherche/filtre est active
             ])->render()
         ]);
     }
