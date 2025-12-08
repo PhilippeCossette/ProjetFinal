@@ -52,9 +52,10 @@ if (cellierRoot) {
 const suggestionsBox = document.getElementById("suggestionsBox");
 let suggestionTimeout = null;
 
-let isListeAchat = false;
+let sortFilterDefault = "date_import-desc";
 if (containerId === "listeAchatContainer") {
-    isListeAchat = true;
+    sortFilterDefault = "date_ajout-desc";
+    console.log(sortFilterDefault);
 }
 
 // Reset des filtres
@@ -70,9 +71,7 @@ function resetFilters() {
         if (isCellier) {
             sortFilter.value = "";
         } else {
-            sortFilter.value = isListeAchat
-                ? "date_ajout-desc"
-                : "date_import-desc";
+            sortFilter.value = sortFilterDefault;
         }
     }
     if (isCellier) {

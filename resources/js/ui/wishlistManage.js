@@ -173,41 +173,6 @@ initWishlistCheckboxes();
 // Réinitialisation après un chargement AJAX
 window.addEventListener("catalogueReloaded", initWishlistCheckboxes);
 
-// Gestion des spinners de chargement pour les images
-function initImageSpinners() {
-    const images = document.querySelectorAll(".wishlist-image");
-    
-    images.forEach((img) => {
-        const spinner = img.closest("div").querySelector(".wishlist-image-spinner");
-        
-        if (!spinner) return;
-        
-        // Fonction pour cacher le spinner et afficher l'image
-        const hideSpinner = () => {
-            spinner.classList.add("hidden");
-            img.classList.remove("opacity-0");
-            img.classList.add("opacity-100");
-        };
-        
-        // Si l'image est déjà chargée (en cache), cacher le spinner immédiatement
-        if (img.complete && img.naturalHeight !== 0) {
-            hideSpinner();
-        } else {
-            // Sinon, attendre le chargement
-            img.addEventListener("load", hideSpinner);
-            img.addEventListener("error", () => {
-                spinner.classList.add("hidden");
-            });
-        }
-    });
-}
-
-// Initialisation au chargement
-initImageSpinners();
-
-// Réinitialisation après un chargement AJAX
-window.addEventListener("catalogueReloaded", initImageSpinners);
-
 async function refreshStats() {
     const response = await fetch("/api/listeAchat/stats");
     if (!response.ok) return;
