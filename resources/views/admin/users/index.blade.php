@@ -14,18 +14,6 @@
         />
     </div>
 
-    {{-- Messages flash --}}
-    @if(session('success'))
-        <div class="bg-green-100 text-green-800 text-sm px-4 py-2 rounded-lg">
-            {{ session('success') }}
-        </div>
-    @endif
-
-    @if(session('error'))
-        <div class="bg-red-100 text-red-800 text-sm px-4 py-2 rounded-lg">
-            {{ session('error') }}
-        </div>
-    @endif
 
     {{-- Barre de recherche --}}
     <x-search-form
@@ -38,7 +26,7 @@
 
     {{-- ====== VERSION TABLE (TABLETTE / DESKTOP) ====== --}}
     <div class="hidden md:block">
-        <div class="bg-card rounded-xl shadow overflow-x-auto mt-4">
+        <div class="bg-card rounded-xl shadow mt-4">
             <table class="min-w-full text-sm">
                 <thead class="bg-muted">
                     <tr class="text-left text-xs font-semibold text-text-muted uppercase">
@@ -49,7 +37,7 @@
                         <th class="px-4 py-3 text-center">Celliers</th>
                         <th class="px-4 py-3">Rôle</th>
                         <th class="px-4 py-3">État</th>
-                        <th class="px-4 py-3 text-right">Actions</th>
+                        <th class="px-4 py-3 text-center">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -90,13 +78,13 @@
                                 </span>
                             </td>
 
-                            <td class="px-4 py-3 text-right whitespace-nowrap space-x-2">
+                            <td class="flex items-center px-4 py-3 whitespace-nowrap ">
 
                                 {{-- Activer / désactiver --}}
                                 <form
                                     method="POST"
                                     action="{{ route('admin.users.toggle-active', $user->id) }}"
-                                    class="inline"
+                                    class="inline flex-1 text-center"
                                 >
                                     @csrf
                                     <x-primary-btn
@@ -107,29 +95,12 @@
                                 </form>
 
                                 {{-- Menu 3 points + "Supprimer" --}}
-                                <div class="relative inline-block text-left group">
-                                    <button
-                                        type="button"
-                                        class="p-2 rounded-full hover:bg-card-hover focus:outline-none"
-                                        aria-label="Actions supplémentaires"
-                                    >
-                                        <x-dynamic-component
-                                            :component="'lucide-more-vertical'"
-                                            class="w-5 h-5 stroke-text-heading"
-                                            aria-hidden="true"
-                                        />
-                                    </button>
-
-                                    <div
-                                        class="absolute right-0 mt-2 hidden group-hover:block group-focus-within:block z-20"
-                                    >
-                                        <x-delete-btn
-                                            :route="route('admin.users.destroy', $user->id)"
-                                            variant="menu"
-                                            label="Supprimer"
-                                        />
-                                    </div>
-                                </div>
+                                <x-dropdown-action
+                                    :id="$user->id"
+                                    :deleteUrl="route('admin.users.destroy', $user->id)"
+                                    :item="$user"
+                                    :absolute="false"
+                                />
                             </td>
                         </tr>
                     @empty
@@ -195,29 +166,12 @@
                         />
                     </form>
 
-                    <div class="relative inline-block text-left group">
-                        <button
-                            type="button"
-                            class="p-2 rounded-full hover:bg-card-hover focus:outline-none"
-                            aria-label="Actions supplémentaires"
-                        >
-                            <x-dynamic-component
-                                :component="'lucide-more-vertical'"
-                                class="w-5 h-5 stroke-text-heading"
-                                aria-hidden="true"
-                            />
-                        </button>
-
-                        <div
-                            class="absolute right-0 mt-2 hidden group-hover:block group-focus-within:block z-20"
-                        >
-                            <x-delete-btn
-                                :route="route('admin.users.destroy', $user->id)"
-                                variant="menu"
-                                label="Supprimer"
-                            />
-                        </div>
-                    </div>
+                    <x-dropdown-action
+                        :id="$user->id"
+                        :deleteUrl="route('admin.users.destroy', $user->id)"
+                        :item="$user"
+                        :absolute="false"
+                    />
                 </div>
             </div>
         @empty
