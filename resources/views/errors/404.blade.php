@@ -7,7 +7,7 @@
 
     {{-- Illutstration --}}
     <img 
-        src="https://cdn-icons-png.flaticon.com/512/7486/7486759.png"
+        src="{{ asset('images/404.png') }}"
         alt="Page introuvable"
         class="w-40 opacity-90">
 
