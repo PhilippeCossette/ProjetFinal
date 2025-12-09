@@ -61,12 +61,22 @@ if (modal && form && cancel) {
                 });
 
                 // Vérifier si la réponse est OK avant de parser JSON
-                let data;
+                let data = {};
                 try {
-                    data = await response.json();
+                    const text = await response.text();
+                    if (text) {
+                        data = JSON.parse(text);
+                    }
                 } catch (jsonError) {
-                    // Si la réponse n'est pas du JSON, c'est probablement une erreur
-                    throw new Error(`Erreur HTTP ${response.status}: ${response.statusText}`);
+                    // Si la réponse n'est pas du JSON, essayer de déterminer le message d'erreur
+                    console.error("Erreur parsing JSON:", jsonError);
+                    if (response.status === 404) {
+                        data = { success: false, message: "La bouteille n'existe plus." };
+                    } else if (response.status === 403) {
+                        data = { success: false, message: "Vous n'avez pas accès à cette bouteille." };
+                    } else {
+                        data = { success: false, message: `Erreur HTTP ${response.status}: ${response.statusText}` };
+                    }
                 }
 
                 if (response.ok && data.success) {
@@ -79,7 +89,7 @@ if (modal && form && cancel) {
                     modal.classList.add("hidden");
                     modal.setAttribute("aria-hidden", "true");
                     
-                    // Recharger la page après un court délai
+                    // Recharger la page après un court délai pour mettre à jour l'affichage
                     setTimeout(() => {
                         window.location.reload();
                     }, 1000);
